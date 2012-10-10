@@ -1,0 +1,26 @@
+{
+  "name": "survey",
+  "version": "0.1.0",
+  "description": "A tool for benchmarking in the surveying sense, not in a competitive sense.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "http://github.com/Schoonology/survey",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Schoonology/survey.git"
+  },
+  "keywords": [
+    "bench",
+    "benchmark",
+    "timing",
+    "performance"
+  ],
+  "author": "Michael Schoonmaker <michael.r.schoonmaker@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "microtime": "~0.3.2",
+    "cli-table": "0.0.2"
+  }
+}
