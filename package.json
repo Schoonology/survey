@@ -1,8 +1,9 @@
 {
   "name": "survey",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A tool for benchmarking in the surveying sense, not in a competitive sense.",
   "main": "index.js",
+  "bin": "bin/survey",
   "scripts": {
     "test": "mocha --reporter spec"
   },
