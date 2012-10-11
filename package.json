@@ -4,7 +4,7 @@
   "description": "A tool for benchmarking in the surveying sense, not in a competitive sense.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec"
   },
   "homepage": "http://github.com/Schoonology/survey",
   "repository": {
