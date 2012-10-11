@@ -1,6 +1,6 @@
 {
   "name": "survey",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A tool for benchmarking in the surveying sense, not in a competitive sense.",
   "main": "index.js",
   "scripts": {
