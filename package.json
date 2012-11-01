@@ -22,7 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "microtime": "~0.3.2",
-    "cli-table": "0.0.2"
+    "cli-table": "0.0.2",
+    "optimist": "~0.3.5"
   },
   "devDependencies": {
     "mocha": "~1.6.0",
