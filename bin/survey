@@ -21,6 +21,11 @@ var path = require('path'),
                 description: 'Output as a JSON Array of result data.',
                 'default': false
             },
+            'parallel': {
+                alias: 'p',
+                description: 'Whether or not (and to what extent) to parallelize tests.',
+                'default': false
+            },
             'help': {
                 description: 'Show this help message, then exit.'
             }
