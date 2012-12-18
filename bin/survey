@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 var path = require('path'),
+    Table = require('easy-table'),
     optimist = require('optimist'),
+    ProgressBar = require('progress'),
     survey = require('../lib/survey'),
     argv = optimist.usage('Run a series of benchmarks exported from FILENAME.\nUsage:survey [options] FILENAME [...MORE]')
         .options({
@@ -26,13 +28,58 @@ if (argv.help) {
     process.exit();
 }
 
-argv._.forEach(function (file) {
-    var subject;
+function run() {
+    var file = argv._.pop(),
+        subject,
+        surveyor,
+        bar;
 
     try {
         subject = require(path.resolve(process.cwd(), file));
-        survey.run(subject, argv, console.log);
     } catch (e) {
-        console.error('Failed to load:', file);
+        console.error('Failed to load:', file, ':', e.stack || e.message);
     }
-});
+
+    console.log('\nSurveying: ' + file + '\n');
+    surveyor = survey
+        .run(subject, argv)
+        .on('complete', function (data) {
+            var table = new Table();
+
+            Object.keys(data).map(function (name) {
+                return {
+                    name: name,
+                    count: data[name].count,
+                    average: data[name].average
+                };
+            }).sort(function compare(a, b) {
+                return a.average - b.average;
+            }).forEach(function (item) {
+                table.cell('Name', item.name);
+                table.cell('Actual Count', item.count, Table.Number());
+                table.cell('Average Duration (µs)', item.average, Table.Number(2));
+                table.newRow();
+            });
+
+            console.log('\n');
+            console.log(table.toString());
+
+            if (!argv._.length) {
+                process.exit();
+            }
+
+            run();
+        });
+
+    bar = new ProgressBar(' [:bar] :percent :etas', {
+        total: surveyor.left,
+        width: 30,
+        complete: '=',
+        incomplete: ' '
+    });
+
+    surveyor.on('sample', function () {
+        bar.tick();
+    });
+}
+run();
