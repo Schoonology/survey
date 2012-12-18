@@ -18,7 +18,8 @@ var path = require('path'),
             },
             'json': {
                 alias: 'j',
-                description: 'Output as a JSON Array of result data.'
+                description: 'Output as a JSON Array of result data.',
+                'default': false
             },
             'help': {
                 description: 'Show this help message, then exit.'
