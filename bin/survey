@@ -16,6 +16,10 @@ var path = require('path'),
                 description: 'Print each test as its running for debugging.',
                 'default': false
             },
+            'json': {
+                alias: 'j',
+                description: 'Output as a JSON Array of result data.'
+            },
             'help': {
                 description: 'Show this help message, then exit.'
             }
@@ -27,6 +31,28 @@ if (argv.help) {
     optimist.showHelp();
     process.exit();
 }
+
+function log(msg) {
+    if (argv.json) {
+        return;
+    }
+
+    console.log(msg);
+}
+
+function json(data) {
+    if (!argv.json) {
+        return;
+    }
+
+    if (typeof data === 'object') {
+        console.log(JSON.stringify(data));
+    } else {
+        console.log(data);
+    }
+}
+
+json('[');
 
 function run() {
     var file = argv._.pop(),
@@ -40,13 +66,14 @@ function run() {
         console.error('Failed to load:', file, ':', e.stack || e.message);
     }
 
-    console.log('\nSurveying: ' + file + '\n');
+    log('\nSurveying: ' + file + '\n');
+
     surveyor = survey
         .run(subject, argv)
         .on('complete', function (data) {
             var table = new Table();
 
-            Object.keys(data).map(function (name) {
+            data = Object.keys(data).map(function (name) {
                 return {
                     name: name,
                     count: data[name].count,
@@ -54,24 +81,30 @@ function run() {
                 };
             }).sort(function compare(a, b) {
                 return a.average - b.average;
-            }).forEach(function (item) {
+            });
+
+            json(data);
+
+            data.forEach(function (item) {
                 table.cell('Name', item.name);
                 table.cell('Actual Count', item.count, Table.Number());
                 table.cell('Average Duration (µs)', item.average, Table.Number(2));
                 table.newRow();
             });
 
-            console.log('\n');
-            console.log(table.toString());
+            log('\n');
+            log(table.toString());
 
             if (!argv._.length) {
+                json(']');
                 process.exit();
             }
 
+            json(',');
             run();
         });
 
-    if (!argv.verbose) {
+    if (!argv.verbose && !argv.json) {
         bar = new ProgressBar(' [:bar] :percent :etas', {
             total: surveyor.left,
             width: 30,
@@ -82,7 +115,7 @@ function run() {
 
     surveyor.on('sample', function (data) {
         if (argv.verbose) {
-            console.log('Survey ' + (surveyor.total - surveyor.left + 1) + ' of ' + surveyor.total + ': "' + data.name + '"');
+            log('Survey ' + (surveyor.total - surveyor.left + 1) + ' of ' + surveyor.total + ': "' + data.name + '"');
         } else if (bar) {
             bar.tick();
         }
