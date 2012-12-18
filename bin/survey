@@ -71,15 +71,21 @@ function run() {
             run();
         });
 
-    bar = new ProgressBar(' [:bar] :percent :etas', {
-        total: surveyor.left,
-        width: 30,
-        complete: '=',
-        incomplete: ' '
-    });
+    if (!argv.verbose) {
+        bar = new ProgressBar(' [:bar] :percent :etas', {
+            total: surveyor.left,
+            width: 30,
+            complete: '=',
+            incomplete: ' '
+        });
+    }
 
-    surveyor.on('sample', function () {
-        bar.tick();
+    surveyor.on('sample', function (data) {
+        if (argv.verbose) {
+            console.log('Survey ' + (surveyor.total - surveyor.left + 1) + ' of ' + surveyor.total + ': "' + data.name + '"');
+        } else if (bar) {
+            bar.tick();
+        }
     });
 }
 run();
