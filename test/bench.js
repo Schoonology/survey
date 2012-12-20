@@ -1,4 +1,6 @@
 module.exports = {
+    'instant': function () {
+    },
     '1ms': function(done) {
         setTimeout(done, 1);
     },

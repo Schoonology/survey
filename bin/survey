@@ -108,6 +108,10 @@ function run() {
 
             json(',');
             run();
+        })
+        .on('error', function (err) {
+            console.error(err.message);
+            process.exit();
         });
 
     if (!argv.verbose && !argv.json) {
