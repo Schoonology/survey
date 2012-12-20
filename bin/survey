@@ -111,7 +111,7 @@ function run() {
         })
         .on('error', function (err) {
             console.error(err.message);
-            process.exit();
+            run();
         });
 
     if (!argv.verbose && !argv.json) {
